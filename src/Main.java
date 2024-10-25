@@ -9,5 +9,6 @@ public class Main {
         ArrayList<WCPlayer> players = FileReader.readPlayerData(fileName);
 
         PlayerFrame frame = new PlayerFrame(players);
+
     }
 }
