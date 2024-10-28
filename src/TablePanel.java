@@ -1,7 +1,10 @@
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,14 +41,18 @@ public class TablePanel extends JPanel {
         playerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         playerTable.setAutoCreateRowSorter(true);
 
-        ListSelectionModel selectionModel = playerTable.getSelectionModel();
-        selectionModel.addListSelectionListener(new ListSelectionListener() {
-
+        playerTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!selectionModel.isSelectionEmpty()) {
-                    int selectedRow = selectionModel.getMinSelectionIndex();
-                    DetailsPanel detailsPanel = new DetailsPanel(players.get(selectedRow));
+            public void mouseClicked(MouseEvent e) {
+                int selectedRow = playerTable.getSelectedRow();
+                if (selectedRow >= 0 && selectedRow <= playerTable.getRowCount()) {
+                    int sortedSelectedRow = playerTable.getRowSorter().convertRowIndexToModel(selectedRow);
+                    String playerName = playerTable.getModel().getValueAt(sortedSelectedRow, 0).toString();
+                    int yearPlayed = (int) playerTable.getModel().getValueAt(sortedSelectedRow, 3);
+
+                    WCPlayer selectedPlayer =  players.stream().filter(player -> player.playerName().equals(playerName) && player.yearPlayed() == yearPlayed).findFirst().orElse(null);
+
+                    DetailsPanel detailsPanel = new DetailsPanel(selectedPlayer);
                     JDialog dialog = new JDialog(parentFrame, "Player Details", true);
                     dialog.setSize(400, 300);
                     dialog.getContentPane().add(detailsPanel);
