@@ -1,29 +1,28 @@
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TablePanel extends JPanel {
-    //JTable table;
-    //JComboBox<String> filterYearComboBox;
     JTable playerTable;
     PlayerTableModel playerTableModel;
     JScrollPane playerTableScrollPane;
-    ArrayList<WCPlayer> players;
+    //ArrayList<WCPlayer> players;
     PlayerFrame parentFrame;
 
     TablePanel(ArrayList<WCPlayer> players, PlayerFrame frame) {
-        this.players = players;
         this.parentFrame = frame;
 
-        add(new JLabel("World Cup Year"));
+        add(new JLabel("Team"));
+        add(createTeamComboBox());
+
+        add(new JLabel("Birth Country"));
+        add(createBCComboBox());
+
+        add(new JLabel("Year Played"));
         add(createYearComboBox());
 
         playerTableModel = new PlayerTableModel();
@@ -46,7 +45,7 @@ public class TablePanel extends JPanel {
             public void valueChanged(ListSelectionEvent e) {
                 if (!selectionModel.isSelectionEmpty()) {
                     int selectedRow = selectionModel.getMinSelectionIndex();
-                    DetailsPanel detailsPanel = new DetailsPanel(parentFrame.filteredPlayers.get(selectedRow));
+                    DetailsPanel detailsPanel = new DetailsPanel(players.get(selectedRow));
                     JDialog dialog = new JDialog(parentFrame, "Player Details", true);
                     dialog.setSize(400, 300);
                     dialog.getContentPane().add(detailsPanel);
@@ -58,42 +57,83 @@ public class TablePanel extends JPanel {
             }
         });
 
-
         playerTableScrollPane = new JScrollPane(playerTable);
 
-        playerTableScrollPane.setPreferredSize(new Dimension(900, 500));
+        playerTableScrollPane.setPreferredSize(new Dimension(900, 225));
         add(playerTableScrollPane);
     }
 
+    //-------------------------------Year Filter
+
     private JComboBox createYearComboBox() {
-        List<String> distinctYears = players.stream().collect(Collectors.groupingBy(WCPlayer::yearPlayed)).keySet().stream().sorted().map(Object::toString).toList();
+        List<String> distinctYears = parentFrame.players.stream().collect(Collectors.groupingBy(WCPlayer::yearPlayed)).keySet().stream().sorted().map(Object::toString).toList();
         String[] distinctYearsArray = distinctYears.toArray(new String[distinctYears.size()]);
 
         JComboBox<String> filterYearComboBox = new JComboBox<>(distinctYearsArray);
         filterYearComboBox.insertItemAt("", 0);
         filterYearComboBox.setFont(new Font("Arial", Font.BOLD, 12));
+
         filterYearComboBox.setSelectedIndex(0);
+        if (parentFrame.yearFilter > 0) {
+            int yo = distinctYears.indexOf(String.valueOf(parentFrame.yearFilter));
+            filterYearComboBox.setSelectedIndex(distinctYears.indexOf(String.valueOf(parentFrame.yearFilter)) + 1);  //add 1 here due to added blank entry
+            int yoyo = filterYearComboBox.getSelectedIndex();;
+        }
+
         filterYearComboBox.addActionListener(e -> {
-            List<WCPlayer> filteredPlayers =  players.stream().toList();
+            int year = 0;
             if (filterYearComboBox.getSelectedIndex() > 0) {
-                int selectedYear = Integer.parseInt(filterYearComboBox.getSelectedItem().toString());
-                filteredPlayers = players.stream().filter(player -> player.yearPlayed() == selectedYear).toList();
+                year = Integer.parseInt(filterYearComboBox.getSelectedItem().toString());
             }
 
-            Object[][] playerData = new Object[filteredPlayers.size()][];
-            for (int i = 0; i < filteredPlayers.size(); i++) {
-                playerData[i] = new Object[] {filteredPlayers.get(i).playerName(), filteredPlayers.get(i).team(), filteredPlayers.get(i).birthCountry(), filteredPlayers.get(i).yearPlayed()};
-            }
-
-            playerTableModel.setData(playerData);
-            parentFrame.setFilteredPlayers(new ArrayList<>(filteredPlayers));
+            parentFrame.setYearFilter(year);
             parentFrame.updateDisplay();
         });
 
         return filterYearComboBox;
     }
 
+    //-------------------------------Team Filter
 
-    private void updatePlayerTableDisplay() {
+    private JComboBox createTeamComboBox(){
+        List<String> teams = parentFrame.players.stream().collect(Collectors.groupingBy(WCPlayer::team)).keySet().stream().sorted().map(Object::toString).toList();
+        String[] teamsArray = teams.toArray(new String[teams.size()]);
+
+        JComboBox<String> filterTeamComboBox = new JComboBox<>(teamsArray);
+        filterTeamComboBox.insertItemAt("", 0);
+        filterTeamComboBox.setFont(new Font("Arial", Font.BOLD, 12));
+        filterTeamComboBox.setSelectedIndex(0);
+        if (!parentFrame.teamFilter.isEmpty()) {
+            filterTeamComboBox.setSelectedIndex(teams.indexOf(parentFrame.teamFilter) + 1);  //add 1 here due to added blank entry
+        }
+
+        filterTeamComboBox.addActionListener(e -> {
+            parentFrame.setTeamFilter(filterTeamComboBox.getSelectedItem().toString());
+            parentFrame.updateDisplay();
+        });
+
+        return filterTeamComboBox;
+    }
+
+    //-------------------------------bc: Birth Country
+
+    private JComboBox createBCComboBox(){
+        List<String> bc = parentFrame.players.stream().collect(Collectors.groupingBy(WCPlayer::birthCountry)).keySet().stream().sorted().map(Object::toString).toList();
+        String[] birthCountriesArray = bc.toArray(new String[bc.size()]);
+
+        JComboBox<String> filterbcComboBox = new JComboBox<>(birthCountriesArray);
+        filterbcComboBox.insertItemAt("", 0);
+        filterbcComboBox.setFont(new Font("Arial", Font.BOLD, 12));
+        filterbcComboBox.setSelectedIndex(0);
+        if (!parentFrame.birthCountryFilter.isEmpty()) {
+            filterbcComboBox.setSelectedIndex(bc.indexOf(parentFrame.birthCountryFilter) + 1);  //add 2 here due to added blank entry
+        }
+
+        filterbcComboBox.addActionListener(e -> {
+            parentFrame.setBirthCountryFilter(filterbcComboBox.getSelectedItem().toString());
+            parentFrame.updateDisplay();
+        });
+
+        return filterbcComboBox;
     }
 }
