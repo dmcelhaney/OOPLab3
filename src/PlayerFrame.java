@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class PlayerFrame extends JFrame {
@@ -13,21 +12,24 @@ public class PlayerFrame extends JFrame {
     String teamFilter = "";
     String birthCountryFilter = "";
 
+    //Setter for yearFilter
     public void setYearFilter(int yearFilter) {
         this.yearFilter = yearFilter;
     }
 
+    //Setter for teamFilter
     public void setTeamFilter(String teamFilter) {
         this.teamFilter = teamFilter;
     }
 
+    //Setter for birthCountryFilter
     public void setBirthCountryFilter(String birthCountryFilter) {
         this.birthCountryFilter = birthCountryFilter;
     }
 
+    //Constructor
     PlayerFrame(ArrayList<WCPlayer> players) {
         this.players = players;
-        //this.filteredPlayers = players;
 
         setPreferredSize(new Dimension(1000, 1200));
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -41,6 +43,7 @@ public class PlayerFrame extends JFrame {
         setVisible(true);
     }
 
+    //Initial display or after filtering on table
     public void updateDisplay() {
         ArrayList<WCPlayer> filteredList =  players;
         if (yearFilter > 0) {

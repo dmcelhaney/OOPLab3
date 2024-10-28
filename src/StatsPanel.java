@@ -3,12 +3,12 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class StatsPanel extends JPanel {
     static final Font labelFont = new Font("Arial", Font.BOLD, 14);
     static final Font valueFont = new Font("Arial", Font.PLAIN, 14);
 
+    //Displays the stats
     public StatsPanel(ArrayList<WCPlayer> players) {
         JLabel numberOfCountriesLabel = new JLabel("# of teams: ");
         numberOfCountriesLabel.setFont(labelFont);

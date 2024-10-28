@@ -12,6 +12,7 @@ public class PlayerChartPanel extends JPanel {
     static final Font labelFont = new Font("Arial", Font.BOLD, 14);
     static final Font valueFont = new Font("Arial", Font.PLAIN, 14);
 
+    //Creates the bar graph
     public PlayerChartPanel(ArrayList<WCPlayer> players) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -21,7 +22,7 @@ public class PlayerChartPanel extends JPanel {
             dataset.addValue(numberOfPlayersForYear, "# of Players", year.substring(2));
         }
 
-        // Create chart
+        //Create chart
         JFreeChart chart = ChartFactory.createBarChart(
                 "Players by Year", // Chart title
                 "Year", // X-axis label

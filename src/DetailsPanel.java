@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 
 public class DetailsPanel extends JPanel {
     static final Font labelFont = new Font("Arial", Font.BOLD, 14);

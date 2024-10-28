@@ -1,7 +1,4 @@
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -10,12 +7,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TablePanel extends JPanel {
-    JTable playerTable;
-    PlayerTableModel playerTableModel;
-    JScrollPane playerTableScrollPane;
-    //ArrayList<WCPlayer> players;
+    //Reference to the playerFrame used for updateDisplay()
     PlayerFrame parentFrame;
 
+    //Constructor
     TablePanel(ArrayList<WCPlayer> players, PlayerFrame frame) {
         this.parentFrame = frame;
 
@@ -28,7 +23,7 @@ public class TablePanel extends JPanel {
         add(new JLabel("Year Played"));
         add(createYearComboBox());
 
-        playerTableModel = new PlayerTableModel();
+        PlayerTableModel playerTableModel = new PlayerTableModel();
 
         Object[][] playerData = new Object[players.size()][];
         for (int i = 0; i < players.size(); i++) {
@@ -36,7 +31,7 @@ public class TablePanel extends JPanel {
         }
         playerTableModel.setData(playerData);
 
-        playerTable = new JTable(playerTableModel);
+        JTable playerTable = new JTable(playerTableModel);
         playerTable.setRowSelectionAllowed(true);
         playerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         playerTable.setAutoCreateRowSorter(true);
@@ -64,7 +59,7 @@ public class TablePanel extends JPanel {
             }
         });
 
-        playerTableScrollPane = new JScrollPane(playerTable);
+        JScrollPane playerTableScrollPane = new JScrollPane(playerTable);
 
         playerTableScrollPane.setPreferredSize(new Dimension(900, 225));
         add(playerTableScrollPane);
