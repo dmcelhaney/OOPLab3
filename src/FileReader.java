@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+//Implementation of Template Method Pattern
 abstract public class FileReader {
     private String filename;
 

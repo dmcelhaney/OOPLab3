@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+//Implementation of Template Method Pattern
 public class CSVFileReader extends FileReader {
 
     @Override

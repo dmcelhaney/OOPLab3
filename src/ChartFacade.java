@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//Implementation of Facade Pattern
 public class ChartFacade {
     public JFreeChart createBarChart(ArrayList<WCPlayer> players){
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
